@@ -31,7 +31,6 @@ def centroid(m, w, h):
 
 def check_centroid(p,c,m,w,h):
     # Needs discard old visited point
-    print >> sys.stderr, c, w, h
     x,y = c
     if c in p and m[x][y]:
         if x+1 <= w-1 and m[x+1][y] and not (x+1,y) in p:
@@ -54,26 +53,45 @@ def check_centroid(p,c,m,w,h):
 #
 # Discard Points
 def discard_points (p0, p1, m, w, h, d):
+    k = 0
+    x = 0
+    y = 0
     if cmp_distance(d) == 1:
         for j in xrange(h):
             for i in xrange(w):
                 if distance((i,j),p1) > distance((i,j),p0):
                     m[i][j] = False
-        return
+                if m[i][j]:
+                    x = x + i
+                    y = y + j
+                    k = k + 1
+        p = (x//k, y//k)
+        return p
 
     if cmp_distance(d) == -1:
         for j in xrange(h):
             for i in xrange(w):
                 if distance((i,j),p1) < distance((i,j),p0):
                     m[i][j] = False
-        return
+                if m[i][j]:    
+                    x = x + i
+                    y = y + j
+                    k = k + 1
+        p = (x//k, y//k)
+        return p
 
     if cmp_distance(d) == 0:
         for j in xrange(h):
             for i in xrange(w):
                 if distance((i,j),p1) != distance((i,j),p0):
                     m[i][j] = False
-        return
+                if m[i][j]:    
+                    x = x + i
+                    y = y + j
+                    k = k + 1
+        p = (x//k, y//k)
+        return p
+
     return
 
 
@@ -102,20 +120,18 @@ P = []
 # game loop
 while True:
     bomb_dir = raw_input()  # Current distance to the bomb compared to previous distance (COLDER, WARMER, SAME or UNKNOWN)
-    print >> sys.stderr,bomb_dir
     if bomb_dir == 'UNKNOWN':
         x1 = w/2
         y1 = h/2
 #        x1, y1  = centroid(M,w,h)
     else:
-        discard_points((x0,y0),(x1,y1),M,w,h,bomb_dir)
+        C = discard_points((x0,y0),(x1,y1),M,w,h,bomb_dir)
         x0 = x1
         y0 = y1
-        x1, y1 = check_centroid(P,centroid(M,w,h),M,w,h)
+        x1, y1 = check_centroid(P,C,M,w,h)
 
     # Write an action using print
     # To debug: print >> sys.stderr, "Debug messages..."
     P.append((x1,y1))
-    print >> sys.stderr, P
     print "%d %d" % (x1,y1)
 
