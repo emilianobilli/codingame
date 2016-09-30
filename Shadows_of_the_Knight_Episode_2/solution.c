@@ -64,6 +64,71 @@ int check_movement(struct point *p, struct point p0, int len)
     return 0;
 }
 
+struct point alternative_centroid(struct point C, struct point *p, int len, int mat[][MAXSIZE], int Xmax, int Ymax)
+{
+    struct point nC;
+    int x, y;
+    x = C.x;
+    y = C.y;
+    
+    if ( x+1 <= Xmax && mat[y][x+1] == TRUE)
+    {
+        nC.x = x+1;
+        nC.y = y;
+        if (!check_movement(p,nC,len))
+            return nC;
+    }
+    if ( y+1 <= Ymax && mat[y+1][x] == TRUE)
+    {
+        nC.x = x;
+        nC.y = y+1;
+        if (!check_movement(p,nC,len))
+            return nC;
+    }
+    if ( x-1 >= 0 && mat[y][x-1] == TRUE)
+    {
+        nC.x = x-1;
+        nC.y = y;
+        if (!check_movement(p,nC,len))
+            return nC;
+    }
+    if ( y-1 >= 0 && mat[y-1][x] == TRUE)
+    {
+        nC.x = x;
+        nC.y = y-1;
+        if (!check_movement(p,nC,len))
+            return nC;
+    }
+    if ( x+1 <= Xmax && y-1 >= 0 && mat[y-1][x+1] == TRUE)
+    {
+        nC.x = x+1;
+        nC.y = y-1;
+        if (!check_movement(p,nC,len))
+            return nC;
+    }
+    if ( x-1 >= 0 && y+1 <= Ymax && mat[y+1][x-1] == TRUE )
+    {
+        nC.x = x-1;
+        nC.y = y+1;
+        if (!check_movement(p,nC,len))
+            return nC;
+    }
+    if ( x+1 <= Xmax && y+1 <= Ymax && mat[y+1][x+1] == TRUE)
+    {
+        nC.x = x+1;
+        nC.y = y+1;
+        if (!check_movement(p,nC,len))
+            return nC;    
+    }    
+    if ( x-1 >= 0 && y-1 >=0 && mat[y-1][x-1] == TRUE )
+    {
+        nC.x = x-1;
+        nC.y = y-1;
+        if (!check_movement(p,nC,len))
+            return nC;
+    }
+}
+
 /**
  * Auto-generated code below aims at helping you parse
  * the standard input according to the problem statement.
@@ -148,7 +213,7 @@ int main()
         p0.y = p1.y;
         p1 =  centroid(M,Xmin,Xmax,Ymin,Ymax);
         if (check_movement(mov,p1,nmov))
-            fprintf(stderr,"Pu--to");
+            p1 = alternative_centroid(p1,mov,nmov,M,Xmax,Ymax);
         add_movement(mov,p1, nmov++, MOVEMENTS);    
         printf("%d %d\n", p1.x,p1.y);
     }
