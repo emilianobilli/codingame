@@ -7,16 +7,7 @@
  * the standard input according to the problem statement.
  **/
 
-char mat[15][200]; 
-
-int find_clone(char *f, int size)
-{
-    int i;
-    for (i=0; i<= size-1; i++)
-        if ( f[i]=='X' )
-            return 1;
-    return 0;
-}
+char mat[15][200] = {0}; 
 
 int find_elevator(char *f, int size)
 {
@@ -53,17 +44,14 @@ int main()
         int clonePos; // position of the leading clone on its floor
         char direction[11]; // direction of the leading clone: LEFT or RIGHT
         scanf("%d%d%s", &cloneFloor, &clonePos, direction);
-        if (!find_clone(mat[cloneFloor],width))
-            x = find_elevator(mat[cloneFloor], width);
-            if ( x < clonePos && !strcmp(direction, "RIGHT"))
-                printf("BLOCK\n");
-            else if ( x > clonePos && !strcmp(direction,"LEFT"))
-                printf("BLOCK\n");
-            else
-                printf("WAIT\n");
+        x = find_elevator(mat[cloneFloor], width);
+        if ( (x < clonePos && !strcmp(direction, "RIGHT")) ||
+             (x > clonePos && !strcmp(direction,"LEFT")))
+            printf("BLOCK\n");
+        else
+            printf("WAIT\n");
         // Write an action using printf(). DON'T FORGET THE TRAILING \n
         // To debug: fprintf(stderr, "Debug messages...\n");
-  
     }
 
     return 0;
